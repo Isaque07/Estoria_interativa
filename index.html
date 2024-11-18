@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Viagem Espacial Interativa</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="story-container" class="container"></div>
+
+    <script>
+      const story = {
+        1: {
+          text: "Você é o capitão de uma nave estelar em uma missão para explorar novos mundos. A nave detecta um sistema planetário desconhecido com três planetas. <a href='#' data-next='2'>Explorar o planeta desértico</a>, <a href='#' data-next='3'>explorar o planeta oceânico</a> ou <a href='#' data-next='4'>explorar o planeta com densa floresta</a>?",
+          options: [2, 3, 4],
+        },
+        2: {
+          text: "No planeta desértico, você encontra ruínas antigas. Há um portal brilhante. <a href='#' data-next='5'>Entrar no portal</a> ou <a href='#' data-next='6'>explorar mais o deserto</a>?",
+          options: [5, 6],
+        },
+        3: {
+          text: "No planeta oceânico, você descobre uma civilização submersa que o convida a uma cerimônia. <a href='#' data-next='7'>Aceitar o convite</a> ou <a href='#' data-next='8'>ficar na nave</a>?",
+          options: [7, 8],
+        },
+        4: {
+          text: "No planeta de florestas densas, criaturas hostis surgem. Você decide <a href='#' data-next='9'>lutar</a> ou <a href='#' data-next='10'>fugir para a nave</a>?",
+          options: [9, 10],
+        },
+        5: {
+          text: "O portal o transporta para outra dimensão, onde você encontra uma poderosa fonte de energia. Um guardião aparece e questiona suas intenções. <a href='#' data-next='11'>Explicar pacificamente</a> ou <a href='#' data-next='12'>atacar o guardião</a>?",
+          options: [11, 12],
+        },
+        6: {
+          text: "Explorando o deserto, você encontra um artefato alienígena. Ele é perigoso, mas valioso. <a href='#' data-next='13'>Ativar o artefato</a> ou <a href='#' data-next='14'>deixar o artefato e sair</a>?",
+          options: [13, 14],
+        },
+        7: {
+          text: "A civilização submersa revela segredos antigos e tecnologias avançadas. Eles pedem ajuda para enfrentar uma ameaça submarina. <a href='#' data-next='15'>Aceitar e ajudá-los</a> ou <a href='#' data-next='16'>recusar e sair</a>?",
+          options: [15, 16],
+        },
+        8: {
+          text: "Você opta por monitorar a civilização à distância. Durante a observação, um fenômeno inesperado começa a afetar sua nave. <a href='#' data-next='17'>Investigar o fenômeno</a> ou <a href='#' data-next='18'>tentar sair do planeta</a>?",
+          options: [17, 18],
+        },
+        9: {
+          text: "Você derrota as criaturas e descobre um templo antigo cheio de tesouros. Mas o templo está desmoronando. <a href='#' data-next='19'>Pegar o máximo de tesouros possível</a> ou <a href='#' data-next='20'>fugir imediatamente</a>?",
+          options: [19, 20],
+        },
+        10: {
+          text: "Você escapa para a nave, mas o planeta se revela instável e começa a desmoronar. Uma nova anomalia surge no radar. <a href='#' data-next='21'>Investigar a anomalia</a> ou <a href='#' data-next='22'>deixar o planeta imediatamente</a>?",
+          options: [21, 22],
+        },
+        11: {
+          text: "O guardião permite que você leve a energia para o seu povo, acreditando em suas intenções. Sua missão é um sucesso.",
+          options: [],
+        },
+        12: {
+          text: "Você derrota o guardião, mas a dimensão colapsa, prendendo você para sempre.",
+          options: [],
+        },
+        13: {
+          text: "O artefato libera uma onda de energia que transforma o planeta, revelando segredos antigos.",
+          options: [],
+        },
+        14: {
+          text: "Você sai do deserto com segurança, mas perde uma grande oportunidade.",
+          options: [],
+        },
+        15: {
+          text: "Você ajuda a civilização submersa a derrotar a ameaça, tornando-se um herói.",
+          options: [],
+        },
+        16: {
+          text: "Você recusa a ajuda e parte, mas o planeta oceânico é destruído.",
+          options: [],
+        },
+        17: {
+          text: "Você descobre que o fenômeno é uma inteligência alienígena tentando se comunicar.",
+          options: [],
+        },
+        18: {
+          text: "Você tenta sair do planeta, mas sua nave é sugada para um buraco negro.",
+          options: [],
+        },
+        19: {
+          text: "Você escapa com tesouros, mas sofre ferimentos graves.",
+          options: [],
+        },
+        20: {
+          text: "Você foge com vida, mas sem nada a mostrar.",
+          options: [],
+        },
+        21: {
+          text: "A anomalia revela ser uma nova forma de vida alienígena.",
+          options: [],
+        },
+        22: {
+          text: "Você deixa o planeta em segurança e continua sua jornada.",
+          options: [],
+        },
+      };
+
+      let path = []; // Caminho percorrido
+
+      function renderStory(step = "1") {
+        const current = story[step];
+        const container = document.getElementById("story-container");
+
+        // Mostra o caminho percorrido até agora
+        let storySoFar = path
+          .map(
+            (choice, index) =>
+              `<p><strong>Decisão ${index + 1}:</strong> ${choice}</p>`
+          )
+          .join("");
+        storySoFar += `<p>${current.text}</p>`;
+
+        container.innerHTML = storySoFar;
+
+        if (current.options.length === 0) {
+          container.innerHTML += `<p>Fim da jornada!</p>`;
+          displayPath(container);
+
+          const restartLink = document.createElement("a");
+          restartLink.href = "?step=1";
+          restartLink.textContent = "Voltar ao início";
+          restartLink.classList.add("story-link");
+          container.appendChild(restartLink);
+        }
+
+        // Adiciona listeners aos links
+        container.querySelectorAll("a[data-next]").forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const nextStep = link.getAttribute("data-next");
+            path.push(current.text); // Salva a escolha atual
+            updateURL(nextStep);
+            renderStory(nextStep);
+          });
+        });
+      }
+
+      function displayPath(container) {
+        const pathContainer = document.createElement("div");
+        pathContainer.innerHTML =
+          "<h3>Caminho percorrido:</h3><ul>" +
+          path.map((choice) => `<li>${choice}</li>`).join("") +
+          "</ul>";
+        container.appendChild(pathContainer);
+      }
+
+      function updateURL(step) {
+        const url = new URL(window.location);
+        url.searchParams.set("step", step);
+        window.history.pushState({}, "", url);
+      }
+
+      window.addEventListener("popstate", () => {
+        const params = new URLSearchParams(window.location.search);
+        const step = params.get("step") || "1";
+        renderStory(step);
+      });
+
+      window.addEventListener("load", () => {
+        const params = new URLSearchParams(window.location.search);
+        const step = params.get("step") || "1";
+        path = []; // Reinicia o caminho
+        renderStory(step);
+      });
+    </script>
+  </body>
+</html>
