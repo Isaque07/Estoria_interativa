@@ -1,3 +1,12 @@
+#title {
+  text-align: center; /* Centraliza o título */
+  font-size: 3rem; /* Tamanho maior para o título */
+  color: rgb(0, 0, 139); /* Cor verde para destacar */
+  font-family: "Arial", sans-serif; /* Fonte limpa e moderna */
+  margin-top: 20px; /* Espaço acima do título */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para dar um efeito 3D */
+  letter-spacing: 1px; /* Espaçamento entre as letras */
+}
 body {
     font-family: "Arial", sans-serif;
     background-color: #0d1b2a;
